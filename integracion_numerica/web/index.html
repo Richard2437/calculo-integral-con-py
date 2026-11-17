@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio de Cálculo Integral · Integración y Sucesiones</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --trapecio-color: #f59e0b;
+      --simpson-color: #10b981;
+      --series-color: #8b5cf6;
+      --radius: 14px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      border: 1px solid #1e40af;
+      padding: 24px 30px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .header-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-title p {
+      font-size: 0.95rem;
+      color: #93c5fd;
+      margin-top: 4px;
+    }
+
+    /* Selector de Módulos (Tabs Superiores) */
+    .module-nav {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #334155;
+      padding-bottom: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Layout principal */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 430px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f1f5f9;
+    }
+
+    /* Presets */
+    .preset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .preset-item {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      color: #e2e8f0;
+    }
+
+    .preset-item:hover {
+      border-color: var(--primary);
+      background: #1e293b;
+    }
+
+    .preset-item.active {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    .preset-item strong {
+      display: block;
+      color: #ffffff;
+      font-size: 0.88rem;
+    }
+
+    .preset-item span {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-family: monospace;
+    }
+
+    /* Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .input-text {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-family: "Consolas", monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-text:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .row-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Slider */
+    .slider-container {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .n-tag {
+      background: #3b82f6;
+      color: white;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 4px;
+      background: #334155;
+      outline: none;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .btn-calc {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn-calc:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Métricas Superiores */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .metric-card.exact::before { background: #60a5fa; }
+    .metric-card.trapecio::before { background: var(--trapecio-color); }
+    .metric-card.simpson::before { background: var(--simpson-color); }
+    .metric-card.series::before { background: var(--series-color); }
+
+    .metric-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      font-family: "Consolas", monospace;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .metric-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #334155;
+      padding-top: 8px;
+      margin-top: 6px;
+    }
+
+    /* Canvas Gráfico */
+    .canvas-container {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    /* Tablas */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 12px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #334155;
+      font-family: "Consolas", monospace;
+    }
+
+    .box-info {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 4px solid var(--simpson-color);
+      border-radius: 0 10px 10px 0;
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div class="header-title">
+      <h1>⚡ Laboratorio de Cálculo Integral</h1>
+      <p>Simulador Interactivo de Integración Numérica (Trapecio vs Simpson) y Sucesiones / Series</p>
+    </div>
+  </header>
+
+  <!-- Pestañas de Navegación de Módulos -->
+  <div class="module-nav">
+    <button class="nav-btn active" id="btnTab1" onclick="cambiarModulo('modulo-integrales')">
+      📐 Módulo 1: Integración Numérica y Áreas
+    </button>
+    <button class="nav-btn" id="btnTab2" onclick="cambiarModulo('modulo-sucesiones')">
+      🔢 Módulo 2: Sucesiones y Series (Taller)
+    </button>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MÓDULO 1: INTEGRACIÓN NUMÉRICA Y ÁREAS                  -->
+  <!-- ======================================================== -->
+  <div id="modulo-integrales" class="grid-layout">
+    <div>
+      <div class="card">
+        <h2>📚 Ejercicios de Integrales (Taller)</h2>
+        <div class="preset-list" id="presetListInt"></div>
+      </div>
+
+      <div class="card">
+        <h2>⚙️ Parámetros de la Integral</h2>
+        <div class="form-group">
+          <label>Función f(x):</label>
+          <input type="text" id="exprInput" class="input-text" value="x * sin(2*x)">
+        </div>
+
+        <div class="row-2col">
+          <div class="form-group">
+            <label>Límite inf. (a):</label>
+            <input type="text" id="aInput" class="input-text" value="0.0">
+          </div>
+          <div class="form-group">
+            <label>Límite sup. (b):</label>
+            <input type="text" id="bInput" class="input-text" value="1.0">
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <div class="slider-header">
+            <label style="font-weight: 700; color: #cbd5e1;">Subintervalos (n):</label>
+            <span class="n-tag" id="nTag">n = 6</span>
+          </div>
+          <input type="range" id="nSlider" min="2" max="64" step="2" value="6">
+        </div>
+
+        <button class="btn-calc" onclick="calcularIntegrales()">
+          🚀 Calcular y Actualizar Gráficos
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="metrics-grid">
+        <div class="metric-card exact">
+          <div class="metric-title">Valor de Referencia Exacto</div>
+          <div class="metric-value" id="valExact">0.43539778</div>
+          <div class="metric-meta"><span>Método: SciPy Quad</span><span>Alta precisión</span></div>
+        </div>
+        <div class="metric-card trapecio">
+          <div class="metric-title">Regla del Trapecio (n=<span id="lblNTrap">6</span>)</div>
+          <div class="metric-value" id="valTrap" style="color: #fbbf24;">0.430335</div>
+          <div class="metric-meta"><span>Error: <strong id="errTrap">5.06e-03</strong></span><span id="errRelTrap">1.16%</span></div>
+        </div>
+        <div class="metric-card simpson">
+          <div class="metric-title">Regla de Simpson 1/3 (n=<span id="lblNSimp">6</span>)</div>
+          <div class="metric-value" id="valSimp" style="color: #34d399;">0.435422</div>
+          <div class="metric-meta"><span>Error: <strong id="errSimp">2.45e-05</strong></span><span id="lblRatioVentaja">~206x más preciso</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Visualización Geométrica y de Convergencia</h2>
+        <div class="canvas-container">
+          <canvas id="canvasInt" width="920" height="400"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 Tabla de Convergencia (Error vs n)</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr><th>n</th><th>h</th><th>Aprox. Trapecio</th><th>Error Trapecio</th><th>Aprox. Simpson</th><th>Error Simpson</th><th>Ventaja Simpson</th></tr>
+            </thead>
+            <tbody id="tbodyInt"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MÓDULO 2: SUCESIONES Y SERIES                          -->
+  <!-- ======================================================== -->
+  <div id="modulo-sucesiones" class="grid-layout" style="display: none;">
+    <div>
+      <div class="card">
+        <h2>📚 Ejercicios de Sucesiones (Taller)</h2>
+        <div class="preset-list" id="presetListSuc"></div>
+      </div>
+
+      <div class="card">
+        <h2>⚙️ Término General aₙ</h2>
+        <div class="form-group">
+          <label>Fórmula aₙ:</label>
+          <input type="text" id="exprSuc" class="input-text" value="n / (2*n + 1)">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Soporta: n, sin(n*pi/2), 1/5^n, 4*sqrt(n), etc.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Cantidad de términos a calcular (k):</label>
+          <input type="number" id="kInput" class="input-text" value="8" min="3" max="50">
+        </div>
+
+        <button class="btn-calc" onclick="calcularSucesiones()">
+          🚀 Analizar Sucesión y Límite
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>📋 Diagnóstico y Términos Calculados</h2>
+        <div class="box-info" id="boxDictamenSuc">
+          <strong>Dictamen:</strong> Cargando...
+        </div>
+        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr><th>n</th><th>Término aₙ</th><th>Suma Parcial Sₙ</th></tr>
+            </thead>
+            <tbody id="tbodySuc"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="metrics-grid">
+        <div class="metric-card series">
+          <div class="metric-title">Estado de Convergencia</div>
+          <div class="metric-value" id="cardEstadoSuc" style="font-size: 1.25rem;">CONVERGE</div>
+          <div class="metric-meta"><span>Límite L:</span><strong id="cardLimSuc">0.5 (1/2)</strong></div>
+        </div>
+        <div class="metric-card series">
+          <div class="metric-title">Último Término Calculado (aₖ)</div>
+          <div class="metric-value" id="cardUltimoTerm">0.470588</div>
+          <div class="metric-meta"><span>Índice k:</span><span id="cardIdxK">k = 8</span></div>
+        </div>
+        <div class="metric-card series">
+          <div class="metric-title">Suma Parcial de la Serie (Sₖ)</div>
+          <div class="metric-value" id="cardSumaK" style="color: #a78bfa;">3.342150</div>
+          <div class="metric-meta"><span>∑ aₙ (n=1..k)</span><span>Acumulada</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Gráficos de la Sucesión aₙ y Serie Sₖ</h2>
+        <div class="canvas-container">
+          <canvas id="canvasSuc" width="920" height="400"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Cambiar entre Pestañas de Módulos
+  function cambiarModulo(idModulo) {
+    document.getElementById('modulo-integrales').style.display = (idModulo === 'modulo-integrales') ? 'grid' : 'none';
+    document.getElementById('modulo-sucesiones').style.display = (idModulo === 'modulo-sucesiones') ? 'grid' : 'none';
+    document.getElementById('btnTab1').classList.toggle('active', idModulo === 'modulo-integrales');
+    document.getElementById('btnTab2').classList.toggle('active', idModulo === 'modulo-sucesiones');
+  }
+
+  // PRESETS INTEGRALES (Del taller)
+  const PRESETS_INT = [
+    { nombre: "Taller 2a: f(x) = x · sin(2x)", expr: "x * sin(2*x)", a: "0.0", b: "1.0", n: 6 },
+    { nombre: "Taller 2c: f(x) = x · √(1 + x²)", expr: "x * sqrt(1 + x**2)", a: "0.0", b: "2.0", n: 6 },
+    { nombre: "Taller 2d: f(x) = 2x / (x² - 1)", expr: "2*x / (x**2 - 1)", a: "3.0", b: "4.0", n: 4 },
+    { nombre: "Taller 2f: f(x) = 1 / √(1 + eˣ)", expr: "1 / sqrt(1 + exp(x))", a: "0.0", b: "2.0", n: 6 },
+    { nombre: "Taller 2g: f(x) = (2x + 1) / (3 + 2x)", expr: "(2*x + 1) / (3 + 2*x)", a: "0.0", b: "1.0", n: 4 },
+    { nombre: "Taller 2h: f(x) = ln(x) / √x", expr: "log(x) / sqrt(x)", a: "1.0", b: "3.0", n: 6 },
+    { nombre: "Taller 1a (Área): y=x y y=x²", expr: "x - x**2", a: "0.0", b: "1.0", n: 4 },
+    { nombre: "Taller 1d (Área): y=x²+3 y y=4x²", expr: "3 - 3*x**2", a: "-1.0", b: "1.0", n: 6 },
+    { nombre: "Clásica: f(x) = e^(-x²)", expr: "exp(-x**2)", a: "0.0", b: "1.0", n: 4 }
+  ];
+
+  // PRESETS SUCESIONES (Del taller)
+  const PRESETS_SUC = [
+    { nombre: "Taller 1: aₙ = n / (2n + 1)", expr: "n / (2*n + 1)", k: 8 },
+    { nombre: "Taller 2: aₙ = sin(n·π / 2)", expr: "sin(n * pi / 2)", k: 8 },
+    { nombre: "Taller 4a: aₙ = 1 / 5ⁿ", expr: "1 / (5**n)", k: 8 },
+    { nombre: "Taller 4b: aₙ = 4·√n", expr: "4 * sqrt(n)", k: 8 },
+    { nombre: "Taller 4c: aₙ = (n² - 1) / (n² + 1)", expr: "(n**2 - 1) / (n**2 + 1)", k: 8 },
+    { nombre: "Taller 4d: aₙ = (4n - 3) / (3n + 4)", expr: "(4*n - 3) / (3*n + 4)", k: 8 },
+    { nombre: "Taller 4e: aₙ = n⁴ / 2ⁿ", expr: "(n**4) / (2**n)", k: 10 },
+    { nombre: "Taller 4f: aₙ = n · 2⁻ⁿ", expr: "n * (2**(-n))", k: 8 },
+    { nombre: "Taller 5a: aₙ = (-3)ⁿ⁻¹ / 4ⁿ", expr: "((-3)**(n-1)) / (4**n)", k: 8 },
+    { nombre: "Taller 5c: aₙ = 1 / (n·(n + 2))", expr: "1 / (n * (n + 2))", k: 8 }
+  ];
+
+  // Cargar Presets Integrales
+  const contInt = document.getElementById('presetListInt');
+  PRESETS_INT.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = `preset-item ${i === 0 ? 'active' : ''}`;
+    d.innerHTML = `<strong>${p.nombre}</strong><span>${p.expr} en [${p.a}, ${p.b}]</span>`;
+    d.onclick = () => {
+      document.querySelectorAll('#presetListInt .preset-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
+      document.getElementById('exprInput').value = p.expr;
+      document.getElementById('aInput').value = p.a;
+      document.getElementById('bInput').value = p.b;
+      document.getElementById('nSlider').value = p.n;
+      document.getElementById('nTag').innerText = `n = ${p.n}`;
+      calcularIntegrales();
+    };
+    contInt.appendChild(d);
+  });
+
+  // Cargar Presets Sucesiones
+  const contSuc = document.getElementById('presetListSuc');
+  PRESETS_SUC.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = `preset-item ${i === 0 ? 'active' : ''}`;
+    d.innerHTML = `<strong>${p.nombre}</strong><span>${p.expr}</span>`;
+    d.onclick = () => {
+      document.querySelectorAll('#presetListSuc .preset-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
+      document.getElementById('exprSuc').value = p.expr;
+      document.getElementById('kInput').value = p.k;
+      calcularSucesiones();
+    };
+    contSuc.appendChild(d);
+  });
+
+  // Slider N
+  const nSlider = document.getElementById('nSlider');
+  nSlider.oninput = (e) => {
+    let v = parseInt(e.target.value);
+    if (v % 2 !== 0) v += 1;
+    document.getElementById('nTag').innerText = `n = ${v}`;
+  };
+  nSlider.onchange = () => calcularIntegrales();
+
+  // Parse math
+  function parseMath(exprStr, varName) {
+    let js = exprStr.replace(/\bsen\b/gi, 'Math.sin')
+                    .replace(/\bln\b/gi, 'Math.log')
+                    .replace(/\btg\b/gi, 'Math.tan')
+                    .replace(/\^/g, '**');
+    js = js.replace(/\blog10\b/gi, '__LOG10__');
+    js = js.replace(/(\d)\s*([xXeEnN]|pi|\()/g, '$1*$2');
+    js = js.replace(/(\))\s*(\d|[xXeEnN]|pi|\()/g, '$1*$2');
+    js = js.replace(/__LOG10__/g, 'Math.log10');
+    js = js.replace(/\bsin\b/gi, 'Math.sin')
+           .replace(/\bcos\b/gi, 'Math.cos')
+           .replace(/\btan\b/gi, 'Math.tan')
+           .replace(/\bexp\b/gi, 'Math.exp')
+           .replace(/\blog\b/gi, 'Math.log')
+           .replace(/\bsqrt\b/gi, 'Math.sqrt')
+           .replace(/\bpi\b/gi, 'Math.PI')
+           .replace(/\be\b/g, 'Math.E');
+
+    return function(v) {
+      try {
+        let r = Function(varName, 'return ' + js)(v);
+        return (typeof r === 'number' && !isNaN(r)) ? r : 0;
+      } catch (e) {
+        return 0;
+      }
+    };
+  }
+
+  function parseLimit(valStr) {
+    let s = String(valStr).trim().toLowerCase().replace(',', '.');
+    if (s === 'pi') return Math.PI;
+    if (s === 'e') return Math.E;
+    s = s.replace(/pi/g, Math.PI.toString()).replace(/e/g, Math.E.toString()).replace(/\^/g, '**');
+    try {
+      let v = Function('return ' + s)();
+      return (typeof v === 'number' && !isNaN(v)) ? v : parseFloat(valStr);
+    } catch (e) {
+      return parseFloat(valStr) || 0.0;
+    }
+  }
+
+  // ===================== CALCULO INTEGRALES =====================
+  function calcularIntegrales() {
+    const expr = document.getElementById('exprInput').value;
+    const a = parseLimit(document.getElementById('aInput').value);
+    const b = parseLimit(document.getElementById('bInput').value);
+    let n = parseInt(nSlider.value);
+    if (n % 2 !== 0) n += 1;
+
+    if (b <= a) {
+      alert("El límite superior (b) debe ser mayor que el inferior (a).");
+      return;
+    }
+
+    const f = parseMath(expr, 'x');
+    
+    // Simpson 2000 como referencia analítica
+    const hRef = (b - a) / 2000;
+    let sRef = f(a) + f(b);
+    for (let i = 1; i < 2000; i += 2) sRef += 4 * f(a + i * hRef);
+    for (let i = 2; i < 2000; i += 2) sRef += 2 * f(a + i * hRef);
+    const exacto = (hRef / 3) * sRef;
+
+    // Trapecio
+    const hT = (b - a) / n;
+    let sT = 0.5 * (f(a) + f(b));
+    for (let i = 1; i < n; i++) sT += f(a + i * hT);
+    const valT = sT * hT;
+
+    // Simpson
+    let sS = f(a) + f(b);
+    for (let i = 1; i < n; i += 2) sS += 4 * f(a + i * hT);
+    for (let i = 2; i < n; i += 2) sS += 2 * f(a + i * hT);
+    const valS = (hT / 3) * sS;
+
+    const errT = Math.abs(exacto - valT);
+    const errS = Math.abs(exacto - valS);
+
+    document.getElementById('valExact').innerText = exacto.toFixed(8);
+    document.getElementById('lblNTrap').innerText = n;
+    document.getElementById('valTrap').innerText = valT.toFixed(6);
+    document.getElementById('errTrap').innerText = errT.toExponential(2);
+    document.getElementById('errRelTrap').innerText = ((errT / Math.abs(exacto)) * 100).toFixed(2) + '%';
+
+    document.getElementById('lblNSimp').innerText = n;
+    document.getElementById('valSimp').innerText = valS.toFixed(6);
+    document.getElementById('errSimp').innerText = errS.toExponential(2);
+    document.getElementById('lblRatioVentaja').innerText = (errS > 1e-15) ? `~${(errT / errS).toFixed(1)}x más preciso` : "Exacto";
+
+    // Tabla
+    const tbody = document.getElementById('tbodyInt');
+    tbody.innerHTML = '';
+    const ns = [2, 4, 8, 16, 32, 64];
+    const errsT = [], errsS = [];
+
+    ns.forEach(ni => {
+      const hi = (b - a) / ni;
+      let sti = 0.5 * (f(a) + f(b));
+      for (let i = 1; i < ni; i++) sti += f(a + i * hi);
+      const vti = sti * hi;
+
+      let ssi = f(a) + f(b);
+      for (let i = 1; i < ni; i += 2) ssi += 4 * f(a + i * hi);
+      for (let i = 2; i < ni; i += 2) ssi += 2 * f(a + i * hi);
+      const vsi = (hi / 3) * ssi;
+
+      const eti = Math.abs(exacto - vti);
+      const esi = Math.abs(exacto - vsi);
+      errsT.push(eti);
+      errsS.push(esi);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${ni}</td><td>${hi.toFixed(4)}</td><td>${vti.toFixed(6)}</td><td>${eti.toExponential(2)}</td><td>${vsi.toFixed(6)}</td><td>${esi.toExponential(2)}</td><td>${(esi > 1e-15) ? (eti/esi).toFixed(1)+'x' : 'Exacto'}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    // Dibujar Canvas
+    dibujarGraficosInt(f, a, b, n, ns, errsT, errsS);
+  }
+
+  function dibujarGraficosInt(f, a, b, n, ns, errsT, errsS) {
+    const cv = document.getElementById('canvasInt');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+    const midW = W / 2;
+
+    // G1
+    const pad = { t: 35, r: 25, b: 40, l: 45 };
+    const gw = midW - pad.l - pad.r, gh = H - pad.t - pad.b;
+
+    let pts = [], minY = 0, maxY = -Infinity;
+    for (let i = 0; i <= 150; i++) {
+      let x = a + (i / 150) * (b - a);
+      let y = f(x);
+      pts.push({ x, y });
+      if (y > maxY) maxY = y;
+    }
+    maxY *= 1.15;
+    if (maxY <= 0) maxY = 1;
+
+    const toX = x => pad.l + ((x - a) / (b - a)) * gw;
+    const toY = y => pad.t + gh - ((y - minY) / (maxY - minY)) * gh;
+
+    // Trapecios
+    const h = (b - a) / n;
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+    ctx.strokeStyle = '#d97706';
+    for (let i = 0; i < n; i++) {
+      let x0 = a + i * h, x1 = a + (i + 1) * h;
+      ctx.beginPath();
+      ctx.moveTo(toX(x0), toY(0));
+      ctx.lineTo(toX(x0), toY(f(x0)));
+      ctx.lineTo(toX(x1), toY(f(x1)));
+      ctx.lineTo(toX(x1), toY(0));
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Curva real
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    pts.forEach((p, idx) => {
+      if (idx === 0) ctx.moveTo(toX(p.x), toY(p.y));
+      else ctx.lineTo(toX(p.x), toY(p.y));
+    });
+    ctx.stroke();
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 12px system-ui';
+    ctx.fillText(`1. Interpretación Geométrica (Trapecios: n = ${n})`, pad.l, 20);
+
+    // G2: Log-Log
+    const pad2 = { t: 35, r: 25, b: 40, l: midW + 50 };
+    const gw2 = W - pad2.l - pad2.r;
+    ctx.fillText('2. Tasa de Convergencia: Error vs n (Log-Log)', pad2.l, 20);
+
+    const minLN = Math.log10(ns[0]), maxLN = Math.log10(ns[ns.length - 1]);
+    const validE = [...errsT, ...errsS].filter(e => e > 1e-15);
+    const minLE = Math.log10(Math.min(...validE, 1e-8)), maxLE = Math.log10(Math.max(...validE, 1e-2));
+
+    const toLX = nVal => pad2.l + ((Math.log10(nVal) - minLN) / (maxLN - minLN)) * gw2;
+    const toLY = eVal => pad2.t + gh - ((Math.log10(Math.max(eVal, 1e-16)) - minLE) / (maxLE - minLE)) * gh;
+
+    // Curvas
+    ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ns.forEach((ni, i) => { if (i === 0) ctx.moveTo(toLX(ni), toLY(errsT[i])); else ctx.lineTo(toLX(ni), toLY(errsT[i])); });
+    ctx.stroke();
+
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ns.forEach((ni, i) => { if (i === 0) ctx.moveTo(toLX(ni), toLY(errsS[i])); else ctx.lineTo(toLX(ni), toLY(errsS[i])); });
+    ctx.stroke();
+
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px monospace';
+    ns.forEach(ni => ctx.fillText(`${ni}`, toLX(ni) - 4, pad2.t + gh + 16));
+  }
+
+  // ===================== CALCULO SUCESIONES =====================
+  function calcularSucesiones() {
+    const expr = document.getElementById('exprSuc').value;
+    const k = parseInt(document.getElementById('kInput').value) || 8;
+    const fAn = parseMath(expr, 'n');
+
+    let terms = [], sums = [], sumAcc = 0;
+    for (let n = 1; n <= k; n++) {
+      let an = fAn(n);
+      terms.push(an);
+      sumAcc += an;
+      sums.push(sumAcc);
+    }
+
+    // Análisis de límite
+    let val500 = fAn(500), val1000 = fAn(1000), val1001 = fAn(1001);
+    let converge = false, lim = null, dictamen = "Diverge";
+
+    let diff = Math.abs(val1001 - val1000);
+    if (diff > 0.05) {
+      dictamen = "DIVERGE (Sucesión Oscilante sin límite)";
+    } else if (Math.abs(val1000) < 1e-5) {
+      converge = true; lim = 0; dictamen = "CONVERGE a 0";
+    } else if (diff < 1e-4) {
+      converge = true; lim = val1000;
+      dictamen = `CONVERGE a ${lim.toFixed(4)}`;
+    } else if (terms[terms.length - 1] > terms[0] * 5) {
+      dictamen = "DIVERGE a +∞";
+    }
+
+    document.getElementById('boxDictamenSuc').innerHTML = `
+      <strong>Fórmula:</strong> aₙ = ${expr}<br>
+      <strong>Dictamen:</strong> <span style="color: ${converge ? '#34d399' : '#f87171'}; font-weight: 700;">${dictamen}</span><br>
+      <strong>Límite:</strong> ${lim !== null ? lim.toFixed(6) : 'No existe'}
+    `;
+
+    document.getElementById('cardEstadoSuc').innerText = converge ? "CONVERGE" : "DIVERGE";
+    document.getElementById('cardEstadoSuc').style.color = converge ? "#34d399" : "#f87171";
+    document.getElementById('cardLimSuc').innerText = lim !== null ? lim.toFixed(4) : "No existe";
+    document.getElementById('cardUltimoTerm').innerText = terms[terms.length - 1].toFixed(6);
+    document.getElementById('cardIdxK').innerText = `k = ${k}`;
+    document.getElementById('cardSumaK').innerText = sumAcc.toFixed(6);
+
+    // Tabla
+    const tbody = document.getElementById('tbodySuc');
+    tbody.innerHTML = '';
+    for (let n = 1; n <= k; n++) {
+      let tr = document.createElement('tr');
+      tr.innerHTML = `<td><strong>${n}</strong></td><td>${terms[n-1].toFixed(6)}</td><td>${sums[n-1].toFixed(6)}</td>`;
+      tbody.appendChild(tr);
+    }
+
+    // Gráfico de Sucesiones
+    dibujarGraficosSuc(terms, sums, lim, k);
+  }
+
+  function dibujarGraficosSuc(terms, sums, lim, k) {
+    const cv = document.getElementById('canvasSuc');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+    const midW = W / 2;
+
+    const pad = { t: 35, r: 25, b: 40, l: 45 };
+    const gw = midW - pad.l - pad.r, gh = H - pad.t - pad.b;
+
+    // G1: a_n vs n
+    let minT = Math.min(...terms, lim !== null ? lim : 0), maxT = Math.max(...terms, lim !== null ? lim : 1);
+    if (minT === maxT) { minT -= 1; maxT += 1; }
+    let dy = (maxT - minT) * 0.15;
+    minT -= dy; maxT += dy;
+
+    const toX = n => pad.l + ((n - 1) / (k - 1 || 1)) * gw;
+    const toY = a => pad.t + gh - ((a - minT) / (maxT - minT)) * gh;
+
+    // Límite horizontal
+    if (lim !== null) {
+      ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(pad.l, toY(lim)); ctx.lineTo(pad.l + gw, toY(lim)); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Puntos a_n
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    terms.forEach((val, i) => { if (i === 0) ctx.moveTo(toX(i + 1), toY(val)); else ctx.lineTo(toX(i + 1), toY(val)); });
+    ctx.stroke();
+
+    ctx.fillStyle = '#60a5fa';
+    terms.forEach((val, i) => {
+      ctx.beginPath(); ctx.arc(toX(i + 1), toY(val), 4.5, 0, Math.PI * 2); ctx.fill();
+    });
+
+    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 12px system-ui';
+    ctx.fillText('1. Términos de la Sucesión (aₙ vs n)', pad.l, 20);
+
+    // G2: Sumas Parciales S_k
+    const pad2 = { t: 35, r: 25, b: 40, l: midW + 50 };
+    const gw2 = W - pad2.l - pad2.r;
+    ctx.fillText('2. Sumas Parciales de la Serie (Sₖ vs k)', pad2.l, 20);
+
+    let minS = Math.min(...sums), maxS = Math.max(...sums);
+    if (minS === maxS) { minS -= 1; maxS += 1; }
+    let dyS = (maxS - minS) * 0.15;
+    minS -= dyS; maxS += dyS;
+
+    const toSX = n => pad2.l + ((n - 1) / (k - 1 || 1)) * gw2;
+    const toSY = s => pad2.t + gh - ((s - minS) / (maxS - minS)) * gh;
+
+    ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    sums.forEach((s, i) => { if (i === 0) ctx.moveTo(toSX(i + 1), toSY(s)); else ctx.lineTo(toSX(i + 1), toSY(s)); });
+    ctx.stroke();
+
+    ctx.fillStyle = '#c084fc';
+    sums.forEach((s, i) => {
+      ctx.beginPath(); ctx.arc(toSX(i + 1), toSY(s), 4, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+
+  // Inicialización
+  calcularIntegrales();
+  calcularSucesiones();
+</script>
+
+</body>
+</html>
