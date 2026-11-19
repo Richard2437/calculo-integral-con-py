@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laboratorio de Cálculo Integral · Integración y Sucesiones</title>
+  <title>Laboratorio de Cálculo Integral · Integración y Sucesiones (LaTeX)</title>
+  <!-- KaTeX para Renderizado Matemático LaTeX de Alta Calidad -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -451,6 +454,17 @@
           🚀 Calcular y Actualizar Gráficos
         </button>
       </div>
+
+      <!-- Card Renderizado LaTeX Integral -->
+      <div class="card" style="border-left: 4px solid #10b981;">
+        <h2>📐 Notación Matemática (LaTeX)</h2>
+        <div id="latexBoxInt" style="padding: 12px; background: #0f172a; border-radius: 8px; text-align: center; font-size: 1.25rem; min-height: 48px; display: flex; align-items: center; justify-content: center; color: #6ee7b7; overflow-x: auto;">
+          $$\int_{0}^{1} x \sin(2x) \, dx$$
+        </div>
+        <button class="btn-calc" style="margin-top: 10px; background: #059669; font-size: 0.88rem; padding: 10px 14px;" onclick="copiarLatexIntegral()">
+          📋 Copiar Código LaTeX para Reporte / Overleaf
+        </button>
+      </div>
     </div>
 
     <div>
@@ -518,6 +532,17 @@
 
         <button class="btn-calc" onclick="calcularSucesiones()">
           🚀 Analizar Sucesión y Límite
+        </button>
+      </div>
+
+      <!-- Card Renderizado LaTeX Sucesión -->
+      <div class="card" style="border-left: 4px solid #8b5cf6;">
+        <h2>🔢 Notación de la Sucesión (LaTeX)</h2>
+        <div id="latexBoxSuc" style="padding: 12px; background: #0f172a; border-radius: 8px; text-align: center; font-size: 1.25rem; min-height: 48px; display: flex; align-items: center; justify-content: center; color: #c4b5fd; overflow-x: auto;">
+          $$a_n = \frac{n}{2n+1}$$
+        </div>
+        <button class="btn-calc" style="margin-top: 10px; background: #7c3aed; font-size: 0.88rem; padding: 10px 14px;" onclick="copiarLatexSucesion()">
+          📋 Copiar Código LaTeX de la Sucesión
         </button>
       </div>
 
@@ -764,6 +789,7 @@
 
     // Dibujar Canvas
     dibujarGraficosInt(f, a, b, n, ns, errsT, errsS);
+    actualizarLatexIntegrales(expr, a, b);
   }
 
   function dibujarGraficosInt(f, a, b, n, ns, errsT, errsS) {
@@ -901,6 +927,7 @@
 
     // Gráfico de Sucesiones
     dibujarGraficosSuc(terms, sums, lim, k);
+    actualizarLatexSucesiones(expr, lim);
   }
 
   function dibujarGraficosSuc(terms, sums, lim, k) {
@@ -967,9 +994,135 @@
     });
   }
 
-  // Inicialización
-  calcularIntegrales();
-  calcularSucesiones();
+  // ===================== FUNCIONES DE FORMATO Y COPIADO LATEX =====================
+  function exprToLatex(str) {
+    if (!str) return "";
+    let s = str.trim();
+    s = s.replace(/\bsen\b/gi, '\\sin ')
+         .replace(/\bsin\b/gi, '\\sin ')
+         .replace(/\bcos\b/gi, '\\cos ')
+         .replace(/\btan\b/gi, '\\tan ')
+         .replace(/\btg\b/gi, '\\tan ')
+         .replace(/\bln\b/gi, '\\ln ')
+         .replace(/\blog\b/gi, '\\ln ')
+         .replace(/\bsqrt\(([^)]+)\)/g, '\\sqrt{$1}')
+         .replace(/\bexp\(([^)]+)\)/g, 'e^{$1}')
+         .replace(/\bpi\b/gi, '\\pi ');
+    s = s.replace(/\*\*/g, '^');
+    s = s.replace(/\*/g, ' \\cdot ');
+    return s;
+  }
+
+  function actualizarLatexIntegrales(expr, a, b) {
+    const lat = exprToLatex(expr);
+    const formula = `\\int_{${a}}^{${b}} \\left( ${lat} \\right) \\, dx`;
+    const box = document.getElementById('latexBoxInt');
+    if (box) {
+      if (window.katex) {
+        try {
+          katex.render(formula, box, { displayMode: true, throwOnError: false });
+          return;
+        } catch(e) {}
+      }
+      box.innerHTML = `\\[ ${formula} \\]`;
+    }
+  }
+
+  function copiarLatexIntegral() {
+    const expr = document.getElementById('exprInput').value;
+    const a = document.getElementById('aInput').value;
+    const b = document.getElementById('bInput').value;
+    const n = document.getElementById('nSlider').value;
+    const valTrap = document.getElementById('valTrap').innerText;
+    const errTrap = document.getElementById('errTrap').innerText;
+    const valSimp = document.getElementById('valSimp').innerText;
+    const errSimp = document.getElementById('errSimp').innerText;
+    const exact = document.getElementById('valExact').innerText;
+    const lat = exprToLatex(expr);
+    
+    const code = `% =========================================================\n` +
+      `% CÁLCULO INTEGRAL: INTEGRACIÓN NUMÉRICA (REPORTE LATEX)\n` +
+      `% =========================================================\n` +
+      `\\begin{equation}\n` +
+      `  I = \\int_{${a}}^{${b}} \\left( ${lat} \\right) \\, dx \\approx ${exact}\n` +
+      `\\end{equation}\n\n` +
+      `\\begin{table}[h!]\n` +
+      `  \\centering\n` +
+      `  \\caption{Comparación de Métodos de Integración Numérica con $n=${n}$}\n` +
+      `  \\begin{tabular}{lcccc}\n` +
+      `    \\hline\n` +
+      `    \\textbf{Método} & \\textbf{Orden} & \\textbf{Aproximación} & \\textbf{Error Absoluto} \\\\\n` +
+      `    \\hline\n` +
+      `    Regla del Trapecio & $\\mathcal{O}(h^2)$ & ${valTrap} & ${errTrap} \\\\\n` +
+      `    Regla de Simpson 1/3 & $\\mathcal{O}(h^4)$ & ${valSimp} & ${errSimp} \\\\\n` +
+      `    \\hline\n` +
+      `  \\end{tabular}\n` +
+      `\\end{table}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        alert("✅ ¡Código LaTeX copiado al portapapeles!\nPuedes pegarlo directamente en tu reporte o en Overleaf.");
+      }).catch(() => {
+        prompt("Copia el código LaTeX para tu reporte:", code);
+      });
+    } else {
+      prompt("Copia el código LaTeX para tu reporte:", code);
+    }
+  }
+
+  function actualizarLatexSucesiones(expr, lim) {
+    const lat = exprToLatex(expr);
+    const limStr = (lim !== null && !isNaN(lim)) ? lim.toFixed(4) : "\\text{Diverge}";
+    const formula = `a_n = ${lat} \\quad \\implies \\quad \\lim_{n \\to \\infty} a_n = ${limStr}`;
+    const box = document.getElementById('latexBoxSuc');
+    if (box) {
+      if (window.katex) {
+        try {
+          katex.render(formula, box, { displayMode: true, throwOnError: false });
+          return;
+        } catch(e) {}
+      }
+      box.innerHTML = `\\[ ${formula} \\]`;
+    }
+  }
+
+  function copiarLatexSucesion() {
+    const expr = document.getElementById('exprSuc').value;
+    const k = document.getElementById('kInput').value;
+    const estado = document.getElementById('cardEstadoSuc').innerText;
+    const lim = document.getElementById('cardLimSuc').innerText;
+    const suma = document.getElementById('cardSumaK').innerText;
+    const lat = exprToLatex(expr);
+
+    const code = `% =========================================================\n` +
+      `% CÁLCULO INTEGRAL: SUCESIONES Y SERIES (REPORTE LATEX)\n` +
+      `% =========================================================\n` +
+      `\\begin{equation}\n` +
+      `  a_n = ${lat}, \\quad n \\in \\mathbb{N}\n` +
+      `\\end{equation}\n\n` +
+      `\\noindent \\textbf{Diagnóstico de Convergencia:}\n` +
+      `\\begin{itemize}\n` +
+      `  \\item Comportamiento: \\textbf{${estado}}\n` +
+      `  \\item Límite: $\\lim_{n \\to \\infty} a_n = ${lim}$\n` +
+      `  \\item Suma Parcial ($k=${k}$): $S_{${k}} = \\sum_{n=1}^{${k}} a_n = ${suma}$\n` +
+      `\\end{itemize}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        alert("✅ ¡Código LaTeX de la sucesión copiado al portapapeles!\nPuedes pegarlo directamente en tu reporte o en Overleaf.");
+      }).catch(() => {
+        prompt("Copia el código LaTeX para tu reporte:", code);
+      });
+    } else {
+      prompt("Copia el código LaTeX para tu reporte:", code);
+    }
+  }
+
+  // Inicialización con llamada a LaTeX
+  window.addEventListener('DOMContentLoaded', () => {
+    calcularIntegrales();
+    calcularSucesiones();
+  });
 </script>
 
 </body>

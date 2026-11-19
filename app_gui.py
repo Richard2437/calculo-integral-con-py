@@ -21,8 +21,8 @@ import calculo_core
 class CalculoIntegralApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Taller Cálculo Integral · Integración Numérica y Sucesiones")
-        self.root.geometry("1300x800")
+        self.root.title("Taller Cálculo Integral · Simulación con Renderizado LaTeX")
+        self.root.geometry("1320x820")
         self.root.minsize(1050, 700)
         
         self.configurar_estilos()
@@ -44,6 +44,8 @@ class CalculoIntegralApp:
         style.configure("SubHeader.TLabel", font=("Segoe UI", 9), foreground="#64748b")
         style.configure("Accent.TButton", font=("Segoe UI", 9, "bold"), background="#2563eb", foreground="#ffffff")
         style.map("Accent.TButton", background=[("active", "#1d4ed8")])
+        style.configure("Latex.TButton", font=("Segoe UI", 8, "bold"), background="#059669", foreground="#ffffff")
+        style.map("Latex.TButton", background=[("active", "#047857")])
         style.configure("Treeview.Heading", font=("Segoe UI", 9, "bold"))
         style.configure("Treeview", rowheight=24, font=("Consolas", 9))
 
@@ -52,54 +54,60 @@ class CalculoIntegralApp:
         header_frame = ttk.Frame(self.root, padding="12 8 12 8")
         header_frame.pack(fill=tk.X)
         
-        titulo = ttk.Label(header_frame, text="⚡ Taller de Cálculo Integral · Laboratorio Interactivo", style="Header.TLabel")
+        titulo = ttk.Label(header_frame, text="⚡ Laboratorio de Cálculo Integral · Motor LaTeX Integrado", style="Header.TLabel")
         titulo.pack(anchor="w")
-        subtitulo = ttk.Label(header_frame, text="Módulos interactivos: Integración Numérica (Trapecio vs Simpson) · Sucesiones y Series (Límites y Convergencia)", style="SubHeader.TLabel")
+        subtitulo = ttk.Label(header_frame, text="Integración Numérica (Trapecio vs Simpson) · Sucesiones y Series (Límites y Convergencia) · Exportación LaTeX", style="SubHeader.TLabel")
         subtitulo.pack(anchor="w")
 
         # Pestañas principales de los dos módulos
         self.notebook_modulos = ttk.Notebook(self.root)
         self.notebook_modulos.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
         
-        # =====================================================
-        # PESTAÑA MÓDULO 1: INTEGRACIÓN NUMÉRICA Y ÁREAS
-        # =====================================================
+        # MÓDULO 1: INTEGRALES
         self.frame_modulo_integrales = ttk.Frame(self.notebook_modulos)
-        self.notebook_modulos.add(self.frame_modulo_integrales, text=" 📐 Módulo 1: Integración Numérica y Áreas ")
+        self.notebook_modulos.add(self.frame_modulo_integrales, text=" 📐 Módulo 1: Integración Numérica y Áreas (LaTeX) ")
         self.crear_modulo_integrales(self.frame_modulo_integrales)
 
-        # =====================================================
-        # PESTAÑA MÓDULO 2: SUCESIONES Y SERIES
-        # =====================================================
+        # MÓDULO 2: SUCESIONES
         self.frame_modulo_sucesiones = ttk.Frame(self.notebook_modulos)
-        self.notebook_modulos.add(self.frame_modulo_sucesiones, text=" 🔢 Módulo 2: Sucesiones y Series (Taller) ")
+        self.notebook_modulos.add(self.frame_modulo_sucesiones, text=" 🔢 Módulo 2: Sucesiones y Series (LaTeX) ")
         self.crear_modulo_sucesiones(self.frame_modulo_sucesiones)
 
     # -----------------------------------------------------------------
-    # CONSTRUCCIÓN DEL MÓDULO 1: INTEGRALES
+    # MÓDULO 1: INTEGRALES
     # -----------------------------------------------------------------
     def crear_modulo_integrales(self, parent):
         paned = ttk.PanedWindow(parent, orient=tk.HORIZONTAL)
         paned.pack(fill=tk.BOTH, expand=True, padx=8, pady=6)
         
-        # Panel izquierdo
-        left = ttk.Frame(paned, width=410, padding="8")
+        left = ttk.Frame(paned, width=420, padding="8")
         paned.add(left, weight=1)
         
         # Presets
         grp_pre = ttk.LabelFrame(left, text=" 📚 Ejercicios de Integrales del Taller ", padding="8")
-        grp_pre.pack(fill=tk.X, pady=(0, 8))
+        grp_pre.pack(fill=tk.X, pady=(0, 6))
         
         self.combo_integ = ttk.Combobox(grp_pre, state="readonly", values=[p["nombre"] for p in calculo_core.PREAJUSTES])
         self.combo_integ.pack(fill=tk.X, pady=(0, 4))
         self.combo_integ.bind("<<ComboboxSelected>>", self.on_preset_integral_selected)
         
-        self.lbl_integ_desc = ttk.Label(grp_pre, text="", wraplength=360, font=("Segoe UI", 8, "italic"), foreground="#475569")
+        self.lbl_integ_desc = ttk.Label(grp_pre, text="", wraplength=370, font=("Segoe UI", 8, "italic"), foreground="#475569")
         self.lbl_integ_desc.pack(fill=tk.X)
         
+        # Visor de Ecuación LaTeX en Tiempo Real
+        grp_latex = ttk.LabelFrame(left, text=" 🧮 Ecuación en Tipografía LaTeX ", padding="4")
+        grp_latex.pack(fill=tk.X, pady=(0, 6))
+        
+        self.fig_latex_int = Figure(figsize=(4.2, 0.7), dpi=100)
+        self.fig_latex_int.patch.set_facecolor('#f8fafc')
+        self.ax_latex_int = self.fig_latex_int.add_subplot(1, 1, 1)
+        self.ax_latex_int.axis('off')
+        self.canvas_latex_int = FigureCanvasTkAgg(self.fig_latex_int, master=grp_latex)
+        self.canvas_latex_int.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
         # Parámetros
-        grp_par = ttk.LabelFrame(left, text=" ⚙️ Parámetros de la Integral ", padding="8")
-        grp_par.pack(fill=tk.X, pady=(0, 8))
+        grp_par = ttk.LabelFrame(left, text=" ⚙️ Parámetros de Integración ", padding="8")
+        grp_par.pack(fill=tk.X, pady=(0, 6))
         
         ttk.Label(grp_par, text="Función f(x):").grid(row=0, column=0, sticky="w", pady=3)
         self.entry_expr = ttk.Entry(grp_par, font=("Consolas", 10))
@@ -126,8 +134,14 @@ class CalculoIntegralApp:
         self.lbl_n_val.pack(side=tk.LEFT, padx=4)
         grp_par.columnconfigure(1, weight=1)
         
-        btn_c = ttk.Button(left, text="🚀 Calcular y Actualizar Gráficos", style="Accent.TButton", command=self.calcular_integral)
-        btn_c.pack(fill=tk.X, pady=(0, 8), ipady=4)
+        btn_box = ttk.Frame(left)
+        btn_box.pack(fill=tk.X, pady=(0, 6))
+        
+        btn_c = ttk.Button(btn_box, text="🚀 Calcular y Graficar", style="Accent.TButton", command=self.calcular_integral)
+        btn_c.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 4), ipady=3)
+        
+        btn_tex = ttk.Button(btn_box, text="📋 Copiar LaTeX", style="Latex.TButton", command=self.copiar_latex_integral)
+        btn_tex.pack(side=tk.RIGHT, ipady=3)
         
         # Resumen
         grp_res = ttk.LabelFrame(left, text=" 📊 Resumen Numérico ", padding="6")
@@ -149,7 +163,7 @@ class CalculoIntegralApp:
         self.nb_integ.pack(fill=tk.BOTH, expand=True)
         
         tab_g = ttk.Frame(self.nb_integ)
-        self.nb_integ.add(tab_g, text=" 📈 Gráficos (Geometría + Error Log-Log) ")
+        self.nb_integ.add(tab_g, text=" 📈 Gráficos con LaTeX (Geometría + Error Log-Log) ")
         
         tab_t = ttk.Frame(self.nb_integ)
         self.nb_integ.add(tab_t, text=" 📋 Tabla de Convergencia ")
@@ -175,13 +189,13 @@ class CalculoIntegralApp:
         cols = ("n", "h", "val_trap", "err_trap", "val_simp", "err_simp", "mejora")
         self.tree_int = ttk.Treeview(parent, columns=cols, show="headings", height=10)
         
-        self.tree_int.heading("n", text="Subintervalos (n)")
+        self.tree_int.heading("n", text="n (Subintervalos)")
         self.tree_int.heading("h", text="Paso (h)")
-        self.tree_int.heading("val_trap", text="Aprox. Trapecio")
-        self.tree_int.heading("err_trap", text="Error Trapecio")
-        self.tree_int.heading("val_simp", text="Aprox. Simpson")
-        self.tree_int.heading("err_simp", text="Error Simpson")
-        self.tree_int.heading("mejora", text="Ventaja de Simpson")
+        self.tree_int.heading("val_trap", text="Trapecio Tₙ")
+        self.tree_int.heading("err_trap", text="Error |Exacto - Tₙ|")
+        self.tree_int.heading("val_simp", text="Simpson Sₙ")
+        self.tree_int.heading("err_simp", text="Error |Exacto - Sₙ|")
+        self.tree_int.heading("mejora", text="Ventaja Simpson")
         
         for c in cols:
             self.tree_int.column(c, anchor="center")
@@ -237,35 +251,43 @@ class CalculoIntegralApp:
 
         try:
             datos = calculo_core.calcular_analisis_completo(expr_str, a_val, b_val, n, [2, 4, 8, 16, 32, 64])
+            self.datos_integrales = datos
         except Exception as err:
             messagebox.showerror("Error de Cálculo", f"No se pudo procesar la función:\n{err}")
             return
 
-        # Resumen
+        # Renderizar Ecuación LaTeX en Tiempo Real
+        self.ax_latex_int.clear()
+        self.ax_latex_int.axis('off')
+        tex_formula = rf"$\int_{{{a_val:.2f}}}^{{{b_val:.2f}}} \left( {datos['expr_latex']} \right) \, dx \approx {datos['valor_exacto']:.6f}$"
+        self.ax_latex_int.text(0.5, 0.5, tex_formula, ha='center', va='center', fontsize=11, color='#1e3a8a')
+        self.canvas_latex_int.draw()
+
+        # Resumen con fórmulas LaTeX
         self.txt_resumen.delete("1.0", tk.END)
         txt = [
             "========================================\n",
-            f" Función: f(x) = {datos['expr']}\n",
+            f" Función LaTeX: ${datos['expr_latex']}$\n",
             f" Intervalo: [{datos['a']:.4f}, {datos['b']:.4f}] | Paso h = {datos['h_actual']:.6f}\n",
             "========================================\n",
             f"• Valor Exacto (scipy.quad):\n  {datos['valor_exacto']:.10f}\n\n",
             f"• Regla del Trapecio (n = {datos['n_actual']}):\n",
-            f"  Aprox : {datos['val_trapecio']:.8f}\n",
+            f"  Aprox T_n : {datos['val_trapecio']:.8f}\n",
             f"  Error Abs : {datos['err_trapecio']:.2e}\n",
             f"  Error Rel : {datos['err_rel_trapecio']:.4f}%\n\n",
             f"• Regla de Simpson 1/3 (n = {datos['n_simpson']}):\n",
-            f"  Aprox : {datos['val_simpson']:.8f}\n",
+            f"  Aprox S_n : {datos['val_simpson']:.8f}\n",
             f"  Error Abs : {datos['err_simpson']:.2e}\n",
             f"  Error Rel : {datos['err_rel_simpson']:.4f}%\n\n"
         ]
         if datos['err_simpson'] > 1e-15:
             r = datos['err_trapecio'] / datos['err_simpson']
-            txt.append(f"⭐ Rendimiento Relativo:\n  Simpson es ~{r:.1f}x más preciso que Trapecio.\n")
+            txt.append(f"⭐ Rendimiento Relativo:\n  Simpson O(h⁴) es ~{r:.1f}x más preciso que Trapecio O(h²).\n")
         else:
             txt.append("⭐ Rendimiento Relativo:\n  Simpson es EXACTO (Error = 0.0).\n")
         self.txt_resumen.insert(tk.END, "".join(txt))
 
-        # Gráficos
+        # Gráficos con tipografía LaTeX
         self.ax1.clear()
         self.ax2.clear()
         
@@ -277,22 +299,22 @@ class CalculoIntegralApp:
         x_n = np.linspace(a, b, n_act + 1)
         y_n = f(x_n)
         
-        self.ax1.plot(x_c, y_c, color='#1d4ed8', lw=2.2, label="f(x) real")
-        self.ax1.fill_between(x_c, y_c, alpha=0.15, color='#3b82f6', label="Área exacta")
+        self.ax1.plot(x_c, y_c, color='#1d4ed8', lw=2.2, label=r"$f(x)$ analítica")
+        self.ax1.fill_between(x_c, y_c, alpha=0.15, color='#3b82f6', label=r"Área $\int_a^b f(x)\,dx$")
         
         for i in range(n_act):
             xs = [x_n[i], x_n[i], x_n[i+1], x_n[i+1]]
             ys = [0, y_n[i], y_n[i+1], 0]
             self.ax1.fill(xs, ys, color='#f97316', alpha=0.20, edgecolor='#c2410c', linestyle='--')
             
-        self.ax1.plot(x_n, y_n, 'o--', color='#ea580c', lw=1.6, markersize=4, label=f"Trapecios (n={n_act})")
+        self.ax1.plot(x_n, y_n, 'o--', color='#ea580c', lw=1.6, markersize=4, label=rf"Trapecios $T_{{{n_act}}}$")
         if n_act <= 32:
             for xi, yi in zip(x_n, y_n):
                 self.ax1.vlines(xi, 0, yi, colors='#94a3b8', linestyles=':')
                 
-        self.ax1.set_title(f"1. Interpretación Geométrica (n={n_act})", fontsize=11, fontweight='bold')
-        self.ax1.set_xlabel("x")
-        self.ax1.set_ylabel("f(x)")
+        self.ax1.set_title(rf"1. Geometría: $f(x) = {datos['expr_latex']}$, $n = {n_act}$, $h = {(b-a)/n_act:.4f}$", fontsize=10, fontweight='bold')
+        self.ax1.set_xlabel(r"$x$")
+        self.ax1.set_ylabel(r"$f(x)$")
         self.ax1.grid(True, linestyle="--", alpha=0.5)
         self.ax1.legend(loc='best', fontsize=8)
         
@@ -302,9 +324,9 @@ class CalculoIntegralApp:
         
         self.ax2.loglog(ns, errs_t, 's-', color='#d97706', lw=2.0, markersize=5, label=r"Trapecio $\mathcal{O}(h^2)$")
         self.ax2.loglog(ns, errs_s, 'o-', color='#059669', lw=2.0, markersize=5, label=r"Simpson $\mathcal{O}(h^4)$")
-        self.ax2.set_title("2. Error vs n (Escala Log-Log)", fontsize=11, fontweight='bold')
-        self.ax2.set_xlabel("Subintervalos n")
-        self.ax2.set_ylabel("Error Absoluto")
+        self.ax2.set_title(r"2. Tasa de Convergencia: Error vs $n$ (Log-Log)", fontsize=10, fontweight='bold')
+        self.ax2.set_xlabel(r"Subintervalos $n$")
+        self.ax2.set_ylabel(r"Error Absoluto $|I_{\mathrm{exacta}} - I_{\mathrm{aprox}}|$")
         
         self.ax2.xaxis.set_minor_locator(NullLocator())
         self.ax2.xaxis.set_major_locator(FixedLocator(ns))
@@ -327,29 +349,48 @@ class CalculoIntegralApp:
                 f"{row['error_simpson']:.2e}", m
             ))
 
+    def copiar_latex_integral(self):
+        if not hasattr(self, 'datos_integrales'):
+            messagebox.showinfo("Aviso", "Primero ejecuta un cálculo para generar el código LaTeX.")
+            return
+        codigo = calculo_core.generar_codigo_latex_reporte(self.datos_integrales)
+        self.root.clipboard_clear()
+        self.root.clipboard_append(codigo)
+        messagebox.showinfo("Código LaTeX Copiado", "¡Código LaTeX copiado al portapapeles!\nPuedes pegarlo directamente en Overleaf o en tu editor LaTeX.")
+
     # -----------------------------------------------------------------
-    # CONSTRUCCIÓN DEL MÓDULO 2: SUCESIONES Y SERIES
+    # MÓDULO 2: SUCESIONES
     # -----------------------------------------------------------------
     def crear_modulo_sucesiones(self, parent):
         paned = ttk.PanedWindow(parent, orient=tk.HORIZONTAL)
         paned.pack(fill=tk.BOTH, expand=True, padx=8, pady=6)
         
-        # Panel izquierdo
-        left = ttk.Frame(paned, width=410, padding="8")
+        left = ttk.Frame(paned, width=420, padding="8")
         paned.add(left, weight=1)
         
         grp_pre = ttk.LabelFrame(left, text=" 📚 Ejercicios de Sucesiones del Taller ", padding="8")
-        grp_pre.pack(fill=tk.X, pady=(0, 8))
+        grp_pre.pack(fill=tk.X, pady=(0, 6))
         
         self.combo_suc = ttk.Combobox(grp_pre, state="readonly", values=[p["nombre"] for p in calculo_core.SUCESIONES_PREAJUSTES])
         self.combo_suc.pack(fill=tk.X, pady=(0, 4))
         self.combo_suc.bind("<<ComboboxSelected>>", self.on_preset_sucesion_selected)
         
-        self.lbl_suc_desc = ttk.Label(grp_pre, text="", wraplength=360, font=("Segoe UI", 8, "italic"), foreground="#475569")
+        self.lbl_suc_desc = ttk.Label(grp_pre, text="", wraplength=370, font=("Segoe UI", 8, "italic"), foreground="#475569")
         self.lbl_suc_desc.pack(fill=tk.X)
         
+        # Visor de Ecuación LaTeX en Tiempo Real para Sucesión
+        grp_latex_s = ttk.LabelFrame(left, text=" 🧮 Término General en LaTeX ", padding="4")
+        grp_latex_s.pack(fill=tk.X, pady=(0, 6))
+        
+        self.fig_latex_suc = Figure(figsize=(4.2, 0.7), dpi=100)
+        self.fig_latex_suc.patch.set_facecolor('#f8fafc')
+        self.ax_latex_suc = self.fig_latex_suc.add_subplot(1, 1, 1)
+        self.ax_latex_suc.axis('off')
+        self.canvas_latex_suc = FigureCanvasTkAgg(self.fig_latex_suc, master=grp_latex_s)
+        self.canvas_latex_suc.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
         grp_par = ttk.LabelFrame(left, text=" ⚙️ Término General aₙ ", padding="8")
-        grp_par.pack(fill=tk.X, pady=(0, 8))
+        grp_par.pack(fill=tk.X, pady=(0, 6))
         
         ttk.Label(grp_par, text="Fórmula aₙ:").grid(row=0, column=0, sticky="w", pady=3)
         self.entry_an = ttk.Entry(grp_par, font=("Consolas", 10))
@@ -361,8 +402,14 @@ class CalculoIntegralApp:
         self.spin_k.grid(row=1, column=1, sticky="w", pady=3)
         grp_par.columnconfigure(1, weight=1)
         
-        btn_cs = ttk.Button(left, text="🚀 Analizar Sucesión y Límite", style="Accent.TButton", command=self.calcular_sucesion)
-        btn_cs.pack(fill=tk.X, pady=(0, 8), ipady=4)
+        btn_box_s = ttk.Frame(left)
+        btn_box_s.pack(fill=tk.X, pady=(0, 6))
+        
+        btn_cs = ttk.Button(btn_box_s, text="🚀 Analizar Sucesión y Límite", style="Accent.TButton", command=self.calcular_sucesion)
+        btn_cs.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 4), ipady=3)
+        
+        btn_tex_s = ttk.Button(btn_box_s, text="📋 Copiar LaTeX", style="Latex.TButton", command=self.copiar_latex_sucesion)
+        btn_tex_s.pack(side=tk.RIGHT, ipady=3)
         
         grp_diag = ttk.LabelFrame(left, text=" 📋 Diagnóstico y Lista de Términos ", padding="6")
         grp_diag.pack(fill=tk.BOTH, expand=True)
@@ -379,7 +426,6 @@ class CalculoIntegralApp:
         right = ttk.Frame(paned, padding="4")
         paned.add(right, weight=3)
         
-        # Gráficos de sucesiones
         self.fig_suc = Figure(figsize=(9.2, 4.8), dpi=100)
         self.fig_suc.subplots_adjust(wspace=0.28, left=0.08, right=0.96, top=0.90, bottom=0.14)
         self.ax_suc1 = self.fig_suc.add_subplot(1, 2, 1)
@@ -419,30 +465,39 @@ class CalculoIntegralApp:
             
         try:
             res = calculo_core.analizar_sucesion(expr_str, k)
+            self.datos_sucesion = res
         except Exception as err:
             messagebox.showerror("Error en Sucesión", f"No se pudo evaluar la sucesión a_n:\n{err}")
             return
+
+        # Renderizar Ecuación LaTeX en Tiempo Real
+        self.ax_latex_suc.clear()
+        self.ax_latex_suc.axis('off')
+        lim_str = f"\\lim_{{n \\to \\infty}} a_n = {res['limite']}" if res['limite'] is not None else "\\text{Diverge}"
+        tex_formula = rf"$a_n = {res['expr_latex']} \quad \Longrightarrow \quad {lim_str}$"
+        self.ax_latex_suc.text(0.5, 0.5, tex_formula, ha='center', va='center', fontsize=11, color='#059669')
+        self.canvas_latex_suc.draw()
 
         # Diagnóstico texto
         self.txt_suc.delete("1.0", tk.END)
         txt = [
             "========================================\n",
-            f" Término general: aₙ = {res['expr']}\n",
+            f" Término general LaTeX: ${res['expr_latex']}$\n",
             "========================================\n",
             f"• Dictamen de Convergencia:\n  👉 {res['estado']}\n\n",
-            f"• Primeros {res['k_terminos']} términos:\n"
+            f"• Primeros {res['k_terminos']} términos calculados:\n"
         ]
         
         for i, val in enumerate(res['terminos']):
             txt.append(f"  a_{i+1} = {val:.6f}\n")
             
-        txt.append("\n• Sumas parciales acumuladas (Serie Sₖ):\n")
+        txt.append("\n• Sumas parciales acumuladas de la serie:\n")
         for i, s_val in enumerate(res['sumas_parciales']):
-            txt.append(f"  S_{i+1} = {s_val:.6f}\n")
+            txt.append(f"  S_{i+1} = \\sum_{{n=1}}^{{{i+1}}} a_n = {s_val:.6f}\n")
             
         self.txt_suc.insert(tk.END, "".join(txt))
 
-        # Dibujar Gráficos
+        # Dibujar Gráficos con LaTeX
         self.ax_suc1.clear()
         self.ax_suc2.clear()
         
@@ -453,25 +508,45 @@ class CalculoIntegralApp:
         
         self.ax_suc1.plot(ns, terms, 'o--', color='#2563eb', lw=1.6, markersize=6, label=r"$a_n$")
         if lim is not None:
-            self.ax_suc1.axhline(lim, color='#dc2626', linestyle=':', lw=2, label=f"Límite L = {lim}")
+            self.ax_suc1.axhline(lim, color='#dc2626', linestyle=':', lw=2, label=rf"$\lim a_n = {lim}$")
             
-        self.ax_suc1.set_title("1. Términos de la Sucesión ($a_n$ vs $n$)", fontsize=11, fontweight='bold')
-        self.ax_suc1.set_xlabel("Índice n")
-        self.ax_suc1.set_ylabel("Valor aₙ")
+        self.ax_suc1.set_title(rf"1. Sucesión: $a_n = {res['expr_latex']}$", fontsize=10, fontweight='bold')
+        self.ax_suc1.set_xlabel(r"Índice $n$")
+        self.ax_suc1.set_ylabel(r"Término $a_n$")
         self.ax_suc1.set_xticks(ns)
         self.ax_suc1.grid(True, linestyle="--", alpha=0.5)
-        self.ax1.legend(loc='best', fontsize=8)
         self.ax_suc1.legend(loc='best', fontsize=8)
         
         self.ax_suc2.plot(ns, sums, 's-', color='#059669', lw=2.0, markersize=6, label=r"$S_k = \sum a_n$")
-        self.ax_suc2.set_title("2. Sumas Parciales de la Serie ($S_k$ vs $k$)", fontsize=11, fontweight='bold')
-        self.ax_suc2.set_xlabel("Términos sumados (k)")
-        self.ax_suc2.set_ylabel("Suma Acumulada Sₖ")
+        self.ax_suc2.set_title(r"2. Sumas Parciales de la Serie $S_k = \sum_{n=1}^k a_n$", fontsize=10, fontweight='bold')
+        self.ax_suc2.set_xlabel(r"Términos sumados ($k$)")
+        self.ax_suc2.set_ylabel(r"Suma Acumulada $S_k$")
         self.ax_suc2.set_xticks(ns)
         self.ax_suc2.grid(True, linestyle="--", alpha=0.5)
         self.ax_suc2.legend(loc='best', fontsize=8)
         
         self.canvas_suc.draw()
+
+    def copiar_latex_sucesion(self):
+        if not hasattr(self, 'datos_sucesion'):
+            messagebox.showinfo("Aviso", "Primero analiza una sucesión para generar el código LaTeX.")
+            return
+        res = self.datos_sucesion
+        tex = [
+            r"% Sucesión y Límite (LaTeX)",
+            r"\begin{equation}",
+            rf"  a_n = {res['expr_latex']}",
+            r"\end{equation}",
+            r"\begin{equation}",
+            rf"  \lim_{{n \to \infty}} a_n = {res['limite'] if res['limite'] is not None else r'\text{No existe (Diverge)}'}",
+            r"\end{equation}",
+            r"\paragraph{Primeros términos:}",
+            r"\[ " + r", \quad ".join([rf"a_{{{i+1}}} = {v:.4f}" for i, v in enumerate(res['terminos'][:6])]) + r" \]"
+        ]
+        codigo = "\n".join(tex)
+        self.root.clipboard_clear()
+        self.root.clipboard_append(codigo)
+        messagebox.showinfo("Código LaTeX Copiado", "¡Código LaTeX de la sucesión copiado al portapapeles!")
 
 def main():
     root = tk.Tk()

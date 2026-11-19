@@ -16,7 +16,7 @@ from matplotlib.ticker import ScalarFormatter, NullLocator, FixedLocator
 from scipy.integrate import quad
 
 # =========================================================================
-# 1. PREAJUSTES DE INTEGRALES (Incluye ejercicios del Taller)
+# 1. PREAJUSTES DE INTEGRALES CON FÓRMULAS LATEX
 # =========================================================================
 PREAJUSTES = [
     {
@@ -26,6 +26,8 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "1.0",
         "n_default": 6,
+        "latex": r"f(x) = x \sin(2x)",
+        "latex_int": r"\int_{0}^{1} x \sin(2x) \, dx",
         "descripcion": "Ejercicio 2a del taller. Integración por partes: valor exacto = (sin(2) - 2*cos(2))/4 ≈ 0.4354."
     },
     {
@@ -35,6 +37,8 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "2.0",
         "n_default": 6,
+        "latex": r"f(x) = x \sqrt{1 + x^2}",
+        "latex_int": r"\int_{0}^{2} x \sqrt{1 + x^2} \, dx",
         "descripcion": "Ejercicio 2c del taller. Sustitución simple u=1+x²: valor exacto = (5√5 - 1)/3 ≈ 3.3934."
     },
     {
@@ -44,6 +48,8 @@ PREAJUSTES = [
         "a": "3.0",
         "b": "4.0",
         "n_default": 4,
+        "latex": r"f(x) = \frac{2x}{x^2 - 1}",
+        "latex_int": r"\int_{3}^{4} \frac{2x}{x^2 - 1} \, dx",
         "descripcion": "Ejercicio 2d del taller. Fracciones parciales / sustitución: valor exacto = ln(15/8) ≈ 0.6286."
     },
     {
@@ -53,6 +59,8 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "2.0",
         "n_default": 6,
+        "latex": r"f(x) = \frac{1}{\sqrt{1 + e^x}}",
+        "latex_int": r"\int_{0}^{2} \frac{1}{\sqrt{1 + e^x}} \, dx",
         "descripcion": "Ejercicio 2f del taller. Integral con función exponencial irracional."
     },
     {
@@ -62,6 +70,8 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "1.0",
         "n_default": 4,
+        "latex": r"f(x) = \frac{2x + 1}{3 + 2x}",
+        "latex_int": r"\int_{0}^{1} \frac{2x + 1}{3 + 2x} \, dx",
         "descripcion": "Ejercicio 2g del taller. División de polinomios: valor exacto = 1 - ln(5/3) ≈ 0.4892."
     },
     {
@@ -71,6 +81,8 @@ PREAJUSTES = [
         "a": "1.0",
         "b": "3.0",
         "n_default": 6,
+        "latex": r"f(x) = \frac{\ln(x)}{\sqrt{x}}",
+        "latex_int": r"\int_{1}^{3} \frac{\ln(x)}{\sqrt{x}} \, dx",
         "descripcion": "Ejercicio 2h del taller. Integración por partes: valor exacto = 2√3·ln(3) - 4√3 + 4 ≈ 0.8778."
     },
     {
@@ -80,7 +92,9 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "1.0",
         "n_default": 4,
-        "descripcion": "Ejercicio 1a del taller. Área de la región encerrada entre la recta y=x y la parábola y=x² (Exacto = 1/6 ≈ 0.1667)."
+        "latex": r"f(x) = x - x^2",
+        "latex_int": r"\int_{0}^{1} (x - x^2) \, dx",
+        "descripcion": "Ejercicio 1a del taller. Área encerrada entre la recta y=x y la parábola y=x² (Exacto = 1/6 ≈ 0.1667)."
     },
     {
         "id": "taller_area_1d",
@@ -89,6 +103,8 @@ PREAJUSTES = [
         "a": "-1.0",
         "b": "1.0",
         "n_default": 6,
+        "latex": r"f(x) = 3 - 3x^2",
+        "latex_int": r"\int_{-1}^{1} (3 - 3x^2) \, dx",
         "descripcion": "Ejercicio 1d del taller. Área encerrada entre dos parábolas intersecadas en x=±1 (Exacto = 4.0)."
     },
     {
@@ -98,6 +114,8 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "1.0",
         "n_default": 4,
+        "latex": r"f(x) = e^{-x^2}",
+        "latex_int": r"\int_{0}^{1} e^{-x^2} \, dx",
         "descripcion": "Función Gaussiana sin primitiva elemental. Caso clásico de integración numérica."
     },
     {
@@ -107,12 +125,14 @@ PREAJUSTES = [
         "a": "0.0",
         "b": "1.0",
         "n_default": 4,
+        "latex": r"f(x) = \frac{1}{1 + x^2}",
+        "latex_int": r"\int_{0}^{1} \frac{1}{1 + x^2} \, dx",
         "descripcion": "Integral analítica es arctan(1) = π/4 ≈ 0.785398."
     }
 ]
 
 # =========================================================================
-# 2. PREAJUSTES DE SUCESIONES Y SERIES (Ejercicios del Taller)
+# 2. PREAJUSTES DE SUCESIONES Y SERIES CON FÓRMULAS LATEX
 # =========================================================================
 SUCESIONES_PREAJUSTES = [
     {
@@ -120,6 +140,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 1: aₙ = n / (2n + 1)",
         "expr": "n / (2*n + 1)",
         "k_default": 8,
+        "latex": r"a_n = \frac{n}{2n + 1}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = \frac{1}{2}",
         "limite_esperado": 0.5,
         "estado_esperado": "CONVERGE a 1/2 (0.5)",
         "descripcion": "Ejercicio 1 del taller. Términos: 1/3, 2/5, 3/7, 4/9, 5/11, 6/13... Divide entre n: lim = 1/2."
@@ -129,8 +151,10 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 2: aₙ = sin(n·π / 2)",
         "expr": "sin(n * pi / 2)",
         "k_default": 8,
+        "latex": r"a_n = \sin\left(\frac{n\pi}{2}\right)",
+        "latex_lim": r"\lim_{n \to \infty} a_n \quad \text{No existe}",
         "limite_esperado": None,
-        "estado_esperado": "DIVERGE (Oscila periódicamente: {1, 0, -1, 0...})",
+        "estado_esperado": "DIVERGE (Oscila: {1, 0, -1, 0...})",
         "descripcion": "Ejercicio 2 del taller. La sucesión oscila indefinidamente entre 1, 0, -1, 0. No tiene límite único."
     },
     {
@@ -138,6 +162,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4a: aₙ = 1 / 5ⁿ",
         "expr": "1 / (5**n)",
         "k_default": 8,
+        "latex": r"a_n = \frac{1}{5^n}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = 0",
         "limite_esperado": 0.0,
         "estado_esperado": "CONVERGE a 0",
         "descripcion": "Ejercicio 4a del taller. Sucesión exponencial decreciente. Como |1/5| < 1, su límite es 0."
@@ -147,6 +173,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4b: aₙ = 4·√n",
         "expr": "4 * sqrt(n)",
         "k_default": 8,
+        "latex": r"a_n = 4\sqrt{n}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = +\infty",
         "limite_esperado": None,
         "estado_esperado": "DIVERGE a +∞",
         "descripcion": "Ejercicio 4b del taller. Conforme n crece, 4√n crece sin cota superior hacia el infinito."
@@ -156,6 +184,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4c: aₙ = (n² - 1) / (n² + 1)",
         "expr": "(n**2 - 1) / (n**2 + 1)",
         "k_default": 8,
+        "latex": r"a_n = \frac{n^2 - 1}{n^2 + 1}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = 1",
         "limite_esperado": 1.0,
         "estado_esperado": "CONVERGE a 1",
         "descripcion": "Ejercicio 4c del taller. Términos: 0, 3/5, 8/10, 15/17... Los grados mayor de n son iguales: lim = 1."
@@ -165,6 +195,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4d: aₙ = (4n - 3) / (3n + 4)",
         "expr": "(4*n - 3) / (3*n + 4)",
         "k_default": 8,
+        "latex": r"a_n = \frac{4n - 3}{3n + 4}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = \frac{4}{3}",
         "limite_esperado": 4/3,
         "estado_esperado": "CONVERGE a 4/3 (≈ 1.3333)",
         "descripcion": "Ejercicio 4d del taller. Dividiendo numerador y denominador entre n: lim = 4/3."
@@ -174,6 +206,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4e: aₙ = n⁴ / 2ⁿ",
         "expr": "(n**4) / (2**n)",
         "k_default": 10,
+        "latex": r"a_n = \frac{n^4}{2^n}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = 0",
         "limite_esperado": 0.0,
         "estado_esperado": "CONVERGE a 0",
         "descripcion": "Ejercicio 4e del taller. Crecimiento exponencial vence al potencial (regla de L'Hôpital): lim = 0."
@@ -183,6 +217,8 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 4f: aₙ = n · 2⁻ⁿ",
         "expr": "n * (2**(-n))",
         "k_default": 8,
+        "latex": r"a_n = n \cdot 2^{-n} = \frac{n}{2^n}",
+        "latex_lim": r"\lim_{n \to \infty} a_n = 0",
         "limite_esperado": 0.0,
         "estado_esperado": "CONVERGE a 0",
         "descripcion": "Ejercicio 4f del taller. Equivale a n / 2ⁿ. Por L'Hôpital: lim = 1 / (2ⁿ·ln 2) = 0."
@@ -192,20 +228,52 @@ SUCESIONES_PREAJUSTES = [
         "nombre": "Taller 5a (Serie): aₙ = (-3)ⁿ⁻¹ / 4ⁿ",
         "expr": "((-3)**(n-1)) / (4**n)",
         "k_default": 8,
+        "latex": r"\sum_{n=1}^{\infty} \frac{(-3)^{n-1}}{4^n}",
+        "latex_lim": r"S = \frac{a}{1 - r} = \frac{1/4}{1 - (-3/4)} = \frac{1}{7}",
         "limite_esperado": 0.0,
         "estado_esperado": "CONVERGE (Serie Geométrica r = -3/4, Suma = 1/7)",
-        "descripcion": "Ejercicio 5a del taller. Serie geométrica con razón |r| = |-3/4| < 1. Converge a a/(1-r) = (1/4)/(7/4) = 1/7."
+        "descripcion": "Ejercicio 5a del taller. Serie geométrica con razón |r| = |-3/4| < 1. Converge a 1/7."
     },
     {
         "id": "suc_5c",
         "nombre": "Taller 5c (Serie): aₙ = 1 / (n·(n + 2))",
         "expr": "1 / (n * (n + 2))",
         "k_default": 8,
+        "latex": r"\sum_{n=1}^{\infty} \frac{1}{n(n+2)}",
+        "latex_lim": r"S = \frac{3}{4} = 0.75",
         "limite_esperado": 0.0,
         "estado_esperado": "CONVERGE (Serie Telescópica, Suma = 3/4 = 0.75)",
-        "descripcion": "Ejercicio 5c del taller. Serie telescópica por fracciones parciales 1/2 * [1/n - 1/(n+2)]. Suma = 3/4."
+        "descripcion": "Ejercicio 5c del taller. Serie telescópica por fracciones parciales. Suma = 3/4."
     }
 ]
+
+# =========================================================================
+# 3. TRADUCTOR AUTOMÁTICO A LATEX
+# =========================================================================
+def convertir_a_latex(expr_str):
+    """Convierte cualquier expresión matemática escrita por el usuario a notación LaTeX."""
+    s = expr_str.strip()
+    
+    # Reemplazos matemáticos
+    s = s.replace('**', '^')
+    s = re.sub(r'\bsen\b', r'\\sin', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bsin\b', r'\\sin', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bcos\b', r'\\cos', s, flags=re.IGNORECASE)
+    s = re.sub(r'\btan\b', r'\\tan', s, flags=re.IGNORECASE)
+    s = re.sub(r'\btg\b', r'\\tan', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bln\b', r'\\ln', s, flags=re.IGNORECASE)
+    s = re.sub(r'\blog\b', r'\\ln', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bpi\b', r'\\pi', s, flags=re.IGNORECASE)
+    s = re.sub(r'\bsqrt\(([^)]+)\)', r'\\sqrt{\1}', s)
+    s = re.sub(r'\bexp\(([^)]+)\)', r'e^{\1}', s)
+    
+    # Manejar fracciones simples tipo a / b
+    # Si hay paréntesis en denominador o numerador
+    s = re.sub(r'([^/]+)\s*/\s*([0-9a-zA-Z_]+|\([^)]+\))', r'\\frac{\1}{\2}', s)
+    s = s.replace('*', ' \\cdot ')
+    s = re.sub(r'\\cdot\s*\\frac', r'\\frac', s)
+    
+    return s
 
 def preprocesar_expresion(expr_str):
     expr = expr_str.strip()
@@ -347,8 +415,11 @@ def calcular_analisis_completo(expr_str, a_raw, b_raw, n_actual=4, subintervalos
             "error_rel_simpson": (es / abs(valor_exacto) * 100) if abs(valor_exacto) > 1e-15 else 0.0,
         })
         
+    expr_latex = convertir_a_latex(expr_str)
+    
     return {
         "expr": expr_limpia,
+        "expr_latex": expr_latex,
         "a": a,
         "b": b,
         "valor_exacto": valor_exacto,
@@ -369,14 +440,37 @@ def calcular_analisis_completo(expr_str, a_raw, b_raw, n_actual=4, subintervalos
         "errores_simp_lista": errores_simp_lista
     }
 
-# =========================================================================
-# 3. MOTOR DE ANÁLISIS DE SUCESIONES Y SERIES
-# =========================================================================
+def generar_codigo_latex_reporte(datos):
+    """Genera código fuente LaTeX completo listo para pegar en Overleaf o reporte."""
+    tex = []
+    tex.append(r"% ========================================================")
+    tex.append(r"% REPORTE DE INTEGRACIÓN NUMÉRICA (CÁLCULO INTEGRAL)")
+    tex.append(r"% Generado automáticamente")
+    tex.append(r"% ========================================================")
+    tex.append(r"\begin{equation}")
+    tex.append(rf"  I = \int_{{{datos['a']:.2f}}}^{{{datos['b']:.2f}}} \left( {datos['expr_latex']} \right) \, dx \approx {datos['valor_exacto']:.8f}")
+    tex.append(r"\end{equation}")
+    tex.append("")
+    tex.append(r"\paragraph{Resultados para $n = " + str(datos['n_actual']) + r"$ (Paso $h = " + f"{datos['h_actual']:.4f}" + r"$):}")
+    tex.append(r"\begin{itemize}")
+    tex.append(rf"  \item \textbf{{Regla del Trapecio:}} $T_{{{datos['n_actual']}}} = {datos['val_trapecio']:.8f}$, Error Absoluto $= {datos['err_trapecio']:.2e}$ ({datos['err_rel_trapecio']:.4f}\%)")
+    tex.append(rf"  \item \textbf{{Regla de Simpson 1/3:}} $S_{{{datos['n_simpson']}}} = {datos['val_simpson']:.8f}$, Error Absoluto $= {datos['err_simpson']:.2e}$ ({datos['err_rel_simpson']:.4f}\%)")
+    tex.append(r"\end{itemize}")
+    tex.append("")
+    tex.append(r"\begin{table}[h!]")
+    tex.append(r"  \centering")
+    tex.append(r"  \caption{Tabla de Convergencia: Error vs $n$ (Orden $\mathcal{O}(h^2)$ vs $\mathcal{O}(h^4)$)}")
+    tex.append(r"  \begin{tabular}{|c|c|c|c|c|c|}")
+    tex.append(r"    \hline")
+    tex.append(r"    $n$ & $h$ & Trapecio $T_n$ & Error $T_n$ & Simpson $S_n$ & Error $S_n$ \\ \hline")
+    for row in datos["tabla"]:
+        tex.append(rf"    {row['n']} & {row['h']:.4f} & {row['val_trapecio']:.6f} & {row['error_trapecio']:.2e} & {row['val_simpson']:.6f} & {row['error_simpson']:.2e} \\")
+    tex.append(r"    \hline")
+    tex.append(r"  \end{tabular}")
+    tex.append(r"\end{table}")
+    return "\n".join(tex)
+
 def analizar_sucesion(expr_an, k_terminos=10):
-    """
-    Evalúa la sucesión a_n para n = 1, 2, ..., k_terminos.
-    Calcula sumas parciales S_k de la serie y determina la convergencia y límite.
-    """
     expr_limpia = preprocesar_expresion(expr_an)
     
     allowed = {
@@ -404,7 +498,6 @@ def analizar_sucesion(expr_an, k_terminos=10):
             
     sumas_parciales = list(np.nancumsum(terminos))
     
-    # Análisis de límite evaluando puntos asintóticos grandes
     muestras_grandes = [100, 200, 500, 1000, 1001, 1002]
     vals_asintoticos = []
     for m in muestras_grandes:
@@ -417,12 +510,10 @@ def analizar_sucesion(expr_an, k_terminos=10):
         except Exception:
             vals_asintoticos.append(None)
             
-    # Detección de límite y convergencia
     converge = False
     limite = None
     estado_str = "Indeterminado"
     
-    # Comprobar oscilación con muestras consecutivas (1000, 1001, 1002)
     val_1000 = vals_asintoticos[-3] if len(vals_asintoticos) >= 3 else None
     val_1001 = vals_asintoticos[-2] if len(vals_asintoticos) >= 2 else None
     val_1002 = vals_asintoticos[-1] if len(vals_asintoticos) >= 1 else None
@@ -440,7 +531,6 @@ def analizar_sucesion(expr_an, k_terminos=10):
         elif diff_consec < 1e-4:
             converge = True
             limite = round(val_1002, 6)
-            # Reconocer fracciones comunes
             for num in range(-10, 11):
                 for den in range(1, 11):
                     if abs(limite - (num/den)) < 1e-3:
@@ -461,7 +551,6 @@ def analizar_sucesion(expr_an, k_terminos=10):
             converge = False
             estado_str = "DIVERGE"
     else:
-        # Si dio overflow (como 4*sqrt(n) o exponenciales crecientes)
         if terminos[-1] > terminos[0] * 5:
             converge = False
             estado_str = "DIVERGE a +∞"
@@ -469,8 +558,11 @@ def analizar_sucesion(expr_an, k_terminos=10):
             converge = False
             estado_str = "DIVERGE"
 
+    expr_latex = convertir_a_latex(expr_an)
+
     return {
         "expr": expr_limpia,
+        "expr_latex": expr_latex,
         "k_terminos": k_terminos,
         "ns": ns,
         "terminos": terminos,
@@ -480,8 +572,79 @@ def analizar_sucesion(expr_an, k_terminos=10):
         "estado": estado_str
     }
 
+def generar_figuras_matplotlib(datos):
+    """Crea la figura de integrales con tipografía matemática LaTeX mathtext."""
+    f, _ = obtener_funcion_segura(datos["expr"])
+    a, b = datos["a"], datos["b"]
+    n_actual = datos["n_actual"]
+    
+    fig = Figure(figsize=(13.5, 5.2), dpi=100)
+    fig.subplots_adjust(wspace=0.25, left=0.07, right=0.96, top=0.90, bottom=0.12)
+    
+    ax1 = fig.add_subplot(1, 2, 1)
+    ax2 = fig.add_subplot(1, 2, 2)
+    
+    # ------------------ GRÁFICO 1: GEOMETRÍA CON LATEX ------------------
+    x_curva = np.linspace(a, b, 250)
+    y_curva = f(x_curva)
+    x_nodos = np.linspace(a, b, n_actual + 1)
+    y_nodos = f(x_nodos)
+    
+    ax1.plot(x_curva, y_curva, color='#1d4ed8', lw=2.5, label=r"$f(x)$ analítica")
+    ax1.fill_between(x_curva, y_curva, alpha=0.15, color='#3b82f6', label=r"Área $\int_a^b f(x)\,dx$")
+    
+    for i in range(n_actual):
+        xs = [x_nodos[i], x_nodos[i], x_nodos[i+1], x_nodos[i+1]]
+        ys = [0, y_nodos[i], y_nodos[i+1], 0]
+        ax1.fill(xs, ys, color='#f97316', alpha=0.18, edgecolor='#c2410c', linestyle='--')
+        
+    ax1.plot(x_nodos, y_nodos, 'o--', color='#ea580c', lw=1.8, markersize=5, label=rf"Trapecios $T_{{{n_actual}}}$")
+    
+    if n_actual <= 32:
+        for xi, yi in zip(x_nodos, y_nodos):
+            ax1.vlines(xi, 0, yi, colors='#94a3b8', linestyles=':')
+        
+    ax1.set_title(rf"1. Geometría: $f(x) = {datos['expr_latex']}$, $n = {n_actual}$, $h = {(b-a)/n_actual:.4f}$", 
+                  fontsize=11, fontweight='bold', pad=10)
+    ax1.set_xlabel(r"$x$", fontsize=10)
+    ax1.set_ylabel(r"$f(x)$", fontsize=10)
+    ax1.grid(True, linestyle="--", alpha=0.5)
+    ax1.legend(loc='best', framealpha=0.9)
+    
+    # ------------------ GRÁFICO 2: CONVERGENCIA CON LATEX ------------------
+    ns = datos["lista_ns"]
+    errs_trap = [max(float(e), 1e-16) for e in datos["errores_trap_lista"]]
+    errs_simp = [max(float(e), 1e-16) for e in datos["errores_simp_lista"]]
+    
+    ax2.loglog(ns, errs_trap, 's-', color='#d97706', lw=2.2, markersize=6, label=r"Trapecio $\mathcal{O}(h^2)$ [Pendiente -2]")
+    ax2.loglog(ns, errs_simp, 'o-', color='#059669', lw=2.2, markersize=6, label=r"Simpson $\mathcal{O}(h^4)$ [Pendiente -4]")
+    
+    ax2.set_title(r"2. Error vs $n$ en Escala $\log_{10}-\log_{10}$", fontsize=11, fontweight='bold', pad=10)
+    ax2.set_xlabel(r"Subintervalos $n$", fontsize=10)
+    ax2.set_ylabel(r"Error Absoluto $|I_{\mathrm{exacta}} - I_{\mathrm{aprox}}|$", fontsize=10)
+    
+    ax2.xaxis.set_minor_locator(NullLocator())
+    ax2.xaxis.set_major_locator(FixedLocator(ns))
+    ax2.xaxis.set_major_formatter(ScalarFormatter())
+    ax2.set_xticks(ns)
+    ax2.set_xticklabels([str(n) for n in ns])
+    
+    ax2.grid(True, which="both", linestyle="--", alpha=0.5)
+    ax2.legend(loc='best', framealpha=0.9)
+    
+    return fig
+
+def generar_imagen_base64(datos):
+    fig = generar_figuras_matplotlib(datos)
+    canvas = FigureCanvasAgg(fig)
+    buf = io.BytesIO()
+    canvas.print_figure(buf, format='png', dpi=130, bbox_inches='tight')
+    buf.seek(0)
+    img_b64 = base64.b64encode(buf.read()).decode('utf-8')
+    return f"data:image/png;base64,{img_b64}"
+
 def generar_figura_sucesion(datos_suc):
-    """Genera la figura Matplotlib de la sucesión y sus sumas parciales."""
+    """Genera la figura Matplotlib de la sucesión y sus sumas parciales con LaTeX."""
     ns = datos_suc["ns"]
     terminos = datos_suc["terminos"]
     sumas = datos_suc["sumas_parciales"]
@@ -493,23 +656,23 @@ def generar_figura_sucesion(datos_suc):
     ax1 = fig.add_subplot(1, 2, 1)
     ax2 = fig.add_subplot(1, 2, 2)
     
-    # 1. Gráfica de los Términos de la Sucesión a_n vs n
+    # 1. Gráfica de Términos a_n vs n
     ax1.plot(ns, terminos, 'o--', color='#2563eb', lw=1.5, markersize=6, label=r"$a_n$")
     if limite is not None:
-        ax1.axhline(limite, color='#dc2626', linestyle=':', lw=2, label=f"Límite L = {limite}")
+        ax1.axhline(limite, color='#dc2626', linestyle=':', lw=2, label=rf"$\lim_{{n \to \infty}} a_n = {limite}$")
         
-    ax1.set_title("1. Términos de la Sucesión ($a_n$ vs $n$)", fontsize=11, fontweight='bold', pad=10)
-    ax1.set_xlabel("Índice n", fontsize=10)
-    ax1.set_ylabel("Valor aₙ", fontsize=10)
+    ax1.set_title(rf"1. Sucesión: $a_n = {datos_suc['expr_latex']}$", fontsize=11, fontweight='bold', pad=10)
+    ax1.set_xlabel(r"Índice $n$", fontsize=10)
+    ax1.set_ylabel(r"Término $a_n$", fontsize=10)
     ax1.set_xticks(ns)
     ax1.grid(True, linestyle="--", alpha=0.5)
     ax1.legend(loc='best', framealpha=0.9)
     
-    # 2. Gráfica de las Sumas Parciales de la Serie S_k
-    ax2.plot(ns, sumas, 's-', color='#059669', lw=2.0, markersize=6, label=r"$S_k = \sum a_n$")
-    ax2.set_title("2. Sumas Parciales de la Serie ($S_k$ vs $k$)", fontsize=11, fontweight='bold', pad=10)
-    ax2.set_xlabel("Número de términos sumados (k)", fontsize=10)
-    ax2.set_ylabel("Suma Acumulada Sₖ", fontsize=10)
+    # 2. Sumas Parciales S_k
+    ax2.plot(ns, sumas, 's-', color='#059669', lw=2.0, markersize=6, label=r"$S_k = \sum_{n=1}^k a_n$")
+    ax2.set_title(r"2. Sumas Parciales de la Serie $S_k = \sum_{n=1}^k a_n$", fontsize=11, fontweight='bold', pad=10)
+    ax2.set_xlabel(r"Términos sumados ($k$)", fontsize=10)
+    ax2.set_ylabel(r"Suma Acumulada $S_k$", fontsize=10)
     ax2.set_xticks(ns)
     ax2.grid(True, linestyle="--", alpha=0.5)
     ax2.legend(loc='best', framealpha=0.9)
